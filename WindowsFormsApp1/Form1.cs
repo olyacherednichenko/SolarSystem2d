@@ -15,6 +15,7 @@ namespace WindowsFormsApp1
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             pictureBox2.Parent = pictureBox10;
             pictureBox3.Parent = pictureBox10;
             pictureBox4.Parent = pictureBox10;
@@ -24,7 +25,8 @@ namespace WindowsFormsApp1
             pictureBox8.Parent = pictureBox10;
             pictureBox9.Parent = pictureBox10;
 
-            
+            Sputnic sp = new Sputnic(pictureBox4);
+            sp.DrawCircle();
 
             timer1.Enabled = true;
 
@@ -55,7 +57,6 @@ namespace WindowsFormsApp1
             
             Pen myPen = new Pen(Color.White, 1); 
             Graphics g = Graphics.FromHwnd(pictureBox10.Handle);
-
             pictureBox1.Left = x + 380;
             pictureBox1.Top = y + 225;
             for (int i=0; i<8; i++)
@@ -91,8 +92,6 @@ namespace WindowsFormsApp1
 
         public void  v(double a, double b , int i, double an)
         {
-        
-            //double an = 0.0;
             var time=0;
             var timer = new Timer();
             timer.Interval = i;
@@ -105,12 +104,52 @@ namespace WindowsFormsApp1
                  if (an > 2 * Math.PI)
                      an = 0;
                  this.Invalidate();
-                 time++; //угол меняется при каждом тике таймера
+                 time++; 
              };
             timer.Start();
 
 
         }
+    }
+
+
+    public class Sputnic : PictureBox
+    {
+        PictureBox name;
+
+        public Sputnic(PictureBox name)
+        {
+            this.name = name;
+        }
+        public void DrawCircle()
+        {
+            Graphics gr = name.CreateGraphics();
+            
+            Pen myPen = new Pen(Color.Gray, 1); 
+            Bitmap bmp = new Bitmap(name.Width, name.Height);
+            bmp = (Bitmap)name.Image;
+
+            float x, y, a=35, b=20;
+            double an = 0;
+            var time = 0;
+            var timer = new Timer();
+            timer.Interval = 10;
+            timer.Tick += (sender, args) =>
+            {
+                x = (int)(a * Math.Cos(an) + 25);
+                y = (int)(b * Math.Sin(an) + 12);
+                gr.FillEllipse(Brushes.Gray, x, y, 10,10);
+                gr.DrawEllipse(myPen, x, y, 10, 10);                
+                an += 0.1;
+                if (an > 1 * Math.PI)
+                    an = 0;
+                this.Invalidate();
+                time++;
+            };
+            timer.Start();
+
+        }
+
     }
 
 }
